@@ -14,7 +14,18 @@ jobs:
                 mkdir -p ~/.ssh
                 echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/meinPrivateKey
                 chmod 400 ~/.ssh/meinPrivateKey
-                ssh-keyscan -H ${{secrets.EC2_IP}}  >> ~/.ssh/known_hosts    
+                ssh-keyscan -H ${{secrets.EC2_IP}}  >> ~/.ssh/known_hosts
+                
+            
+            - name: Ordner auf EC2 anlegen
+              run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "mkdir -p ~/meinOrdner"
+
+            - name: Datei kopieren
+              run: scp -i ~/.ssh/meinPrivateKey meinOrdner/info.txt ubuntu@${{secrets.EC2_IP}}:~/meinOrdner/info.txt
+
+            - name: Check Datein auf EC2
+              run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "ls -l ~/meinOrdner && head -n 1 ~/meinOrdner/info.txt"
+            
             
             - name: install nginx
               run: |
