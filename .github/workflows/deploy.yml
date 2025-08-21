@@ -3,75 +3,75 @@ name: DeployWorkflow
 on: push
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: checkout
-              uses: actions/checkout@v5
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
 
-            - name: ssh setup
-              run: | 
-                mkdir -p ~/.ssh
-                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/meinPrivateKey
-                chmod 400 ~/.ssh/meinPrivateKey
-                ssh-keyscan -H ${{secrets.EC2_IP}}  >> ~/.ssh/known_hosts
-                
-            
-            - name: Ordner auf EC2 anlegen
-              run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "mkdir -p ~/meinOrdner"
-
-            - name: Datei kopieren
-              run: scp -i ~/.ssh/meinPrivateKey meinOrdner/info.txt ubuntu@${{secrets.EC2_IP}}:~/meinOrdner/info.txt
-
-            - name: Check Datein auf EC2
-              run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "ls -l ~/meinOrdner && head -n 1 ~/meinOrdner/info.txt"
-            
-            
-            - name: install nginx
-              run: |
-                ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "sudo apt update -y"
-                ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "sudo apt install nginx -y"
-                
-            - name: SSH Connection
-              run: |
-                scp -i ~/.ssh/meinPrivateKey frontend/index.html ubuntu@${{secrets.EC2_IP}}:/home/ubuntu/index.html
-                ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
-
-    docker-test-job:
-        runs-on: ubuntu-latest
-        needs: deploy
-        steps:
-             - name: ssh setup
-               run: | 
-                mkdir -p ~/.ssh
-                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/meinPrivateKey
-                chmod 400 ~/.ssh/meinPrivateKey
-                ssh-keyscan -H ${{secrets.EC2_IP}}  >> ~/.ssh/known_hosts 
-
-             - name: install docker
-               run: |
-                ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "sudo apt update -y"
-                ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "sudo apt install docker.io -y"
-                ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "sudo usermod -aG docker ubuntu"
-             
-             - name: start nginx container on ec2 instance
-               run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}}"
-                docker stop nginx || true &&
-                docker rm nginx || true &&
-                docker run -d --name nginx -p 8080:80 nginx"
-                
-    cowsay-job:
-       runs-on: ubuntu-latest
-       needs: docker-test-job
-       steps:
-       - name: SSH Setup
-         run: |
+      - name: SSH Setup
+        run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/meinPrivateKey
           chmod 400 ~/.ssh/meinPrivateKey
           ssh-keyscan -H ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
-       - name: Cowsay Install
-         run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "sudo apt update -y && sudo apt install -y cowsay"
-       - name: Cowsay Run
-         run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "cowsay 'Hello from Dustin of of Github-Actions!'"
+
+      - name: Install Nginx
+        run: |
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "sudo apt update -y"
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "sudo apt install nginx -y"
+
+      - name: Copy Files and Configure Nginx
+        run: |
+          scp -i ~/.ssh/meinPrivateKey frontend/index.html ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/index.html
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
+          
+      - name: Create and Copy Info File
+        run: |
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "mkdir -p ~/meinOrdner"
+          scp -i ~/.ssh/meinPrivateKey meinOrdner/info.txt ubuntu@${{ secrets.EC2_IP }}:~/meinOrdner/info.txt
+
+      - name: Check Copied File
+        run: |
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "ls -l ~/meinOrdner && head -n 1 ~/meinOrdner/info.txt"
+
+  docker-test-job:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: SSH Setup
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/meinPrivateKey
+          chmod 400 ~/.ssh/meinPrivateKey
+          ssh-keyscan -H ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
+
+      - name: Install Docker
+        run: |
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "sudo apt update -y"
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "sudo apt install docker.io -y"
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "sudo usermod -aG docker ubuntu"
+
+      - name: Start Nginx Container on EC2
+        run: |
+          ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "
+          docker stop nginx || true &&
+          docker rm nginx || true &&
+          docker run -d --name nginx -p 8080:80 nginx"
+
+  cowsay-job:
+    runs-on: ubuntu-latest
+    needs: docker-test-job
+    steps:
+      - name: SSH Setup
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/meinPrivateKey
+          chmod 400 ~/.ssh/meinPrivateKey
+          ssh-keyscan -H ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
+
+      - name: Cowsay Install
+        run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "sudo apt update -y && sudo apt install -y cowsay"
+      - name: Cowsay Run
+        run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "cowsay 'Hello from Dustin of of Github-Actions!'"
 
