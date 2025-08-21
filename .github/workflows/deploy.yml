@@ -60,13 +60,5 @@ jobs:
                 docker rm nginx || true &&
                 docker run -d --name nginx -p 8080:80 nginx"
                 
-    # cowsay-job:
-    #     runs-on: ubuntu-latest
-    #     needs: docker-test-job
-    #     steps: 
-    #       - name: Cowsay Installieren
-    #         run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} "sudo apt update -y && sudo apt install -y cowsay"
-
-    #       - name: Cowsay ausführen
-    #         run: ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_IP}} 'cowsay "Hallo aus den GitHub Actions"'
+    
 
