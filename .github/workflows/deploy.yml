@@ -28,7 +28,7 @@ jobs:
 
     docker-test-job:
         runs-on: ubuntu-latest
-
+        needs: deploy
         steps:
              - name: ssh setup
                run: | 
