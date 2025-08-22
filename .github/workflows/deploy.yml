@@ -35,6 +35,29 @@ jobs:
         run: |
           ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "ls -l ~/meinOrdner && head -n 1 ~/meinOrdner/info.txt"
 
+  
+  
+  
+  build: 
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v5       
+            
+            - name: ssh setup
+              run: | 
+                mkdir -p ~/.ssh
+                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/meinPrivateKey
+                chmod 400 ~/.ssh/meinPrivateKey
+                ssh-keyscan -H ${{secrets.EC2_IP}}  >> ~/.ssh/known_hosts 
+                
+            - name: copy frontend ordner zu ec2
+              run: |
+                scp -i ~/.ssh/meinPrivateKey -r frontend ubuntu@${{secrets.EC2_IP}}:/home/ubuntu
+
+
+
+
   docker-test-job:
     runs-on: ubuntu-latest
     needs: deploy
@@ -54,11 +77,17 @@ jobs:
 
       - name: Start Nginx Container on EC2
         run: |
+          scp -i ~/.ssh/meinPrivateKey -r frontend ubuntu@${{secrets.EC2_IP}}:/home/ubuntu
           ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.EC2_IP }} "
-          docker stop nginx || true &&
-          docker rm nginx || true &&
-          docker run -d --name nginx -p 8080:80 nginx"
+          docker build -t frontend-image /home/ubuntu/frontend
+          docker stop mein-frontend-container || true &&
+          docker rm mein-frontend-container || true &&
+          docker run -d --name mein-frontend-container -p 8080:80 nginx"
 
+  
+  
+  
+  
   cowsay-job:
     runs-on: ubuntu-latest
     needs: docker-test-job
