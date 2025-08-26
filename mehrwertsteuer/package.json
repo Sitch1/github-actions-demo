@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "jest": "^30.0.5"
+  },
+  "name": "mehrwertsteuer",
+  "version": "1.0.0",
+  "main": "mehrwertsteuer.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
