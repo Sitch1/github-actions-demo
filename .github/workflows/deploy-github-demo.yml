@@ -12,29 +12,29 @@ jobs:
           - name: SSH Setup
             run: |
               mkdir -p ~/.ssh
-              echo "${{ secrets.DEMO_GITHUB_SSH_KEY }}" > ~/.ssh/meinPrivateKey
-              chmod 400 ~/.ssh/meinPrivateKey
+              echo "${{ secrets.DEMO_GITHUB_SSH_KEY }}" > ~/.ssh/github-demo-ssh-key
+              chmod 400 ~/.ssh/github-demo-ssh-key
               ssh-keyscan -H ${{ secrets.DEMO_GITHUB_EC2_IP_2 }} >> ~/.ssh/known_hosts
 
 
           - name: Install Nginx
             run: |
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_2 }} "sudo apt update -y"
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_2 }} "sudo apt install nginx -y"
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_2 }} "sudo apt update -y"
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_2 }} "sudo apt install nginx -y"
 
           - name: Copy Files and Configure Nginx
             run: |
-             scp -i ~/.ssh/meinPrivateKey frontend/index.html ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_2 }}:/home/ubuntu/index.html
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
+             scp -i ~/.ssh/github-demo-ssh-key frontend/index.html ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_2 }}:/home/ubuntu/index.html
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
           
           - name: Create and Copy Info File
             run: |
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "mkdir -p ~/meinOrdner"
-             scp -i ~/.ssh/meinPrivateKey meinOrdner/info.txt ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }}:~/meinOrdner/info.txt
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "mkdir -p ~/meinOrdner"
+             scp -i ~/.ssh/github-demo-ssh-key meinOrdner/info.txt ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }}:~/meinOrdner/info.txt
 
           - name: Check Copied File
             run: |
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "ls -l ~/meinOrdner && head -n 1 ~/meinOrdner/info.txt"
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "ls -l ~/meinOrdner && head -n 1 ~/meinOrdner/info.txt"
 
     build-2:
         runs-on: ubuntu-latest
@@ -46,26 +46,26 @@ jobs:
           - name: SSH Setup
             run: |
               mkdir -p ~/.ssh
-              echo "${{ secrets.DEMO_GITHUB_SSH_KEY }}" > ~/.ssh/meinPrivateKey
-              chmod 400 ~/.ssh/meinPrivateKey
+              echo "${{ secrets.DEMO_GITHUB_SSH_KEY }}" > ~/.ssh/github-demo-ssh-key
+              chmod 400 ~/.ssh/github-demo-ssh-key
               ssh-keyscan -H ${{ secrets.DEMO_GITHUB_EC2_IP_1 }} >> ~/.ssh/known_hosts
 
 
           - name: Install Nginx
             run: |
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "sudo apt update -y"
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "sudo apt install nginx -y"
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "sudo apt update -y"
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "sudo apt install nginx -y"
 
           - name: Copy Files and Configure Nginx
             run: |
-             scp -i ~/.ssh/meinPrivateKey frontend/index.html ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }}:/home/ubuntu/index.html
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
+             scp -i ~/.ssh/github-demo-ssh-key frontend/index.html ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }}:/home/ubuntu/index.html
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
           
           - name: Create and Copy Info File
             run: |
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "mkdir -p ~/meinOrdner"
-             scp -i ~/.ssh/meinPrivateKey meinOrdner/info.txt ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }}:~/meinOrdner/info.txt
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "mkdir -p ~/meinOrdner"
+             scp -i ~/.ssh/github-demo-ssh-key meinOrdner/info.txt ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }}:~/meinOrdner/info.txt
 
           - name: Check Copied File
             run: |
-             ssh -i ~/.ssh/meinPrivateKey ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "ls -l ~/meinOrdner && head -n 1 ~/meinOrdner/info.txt"
+             ssh -i ~/.ssh/github-demo-ssh-key ubuntu@${{ secrets.DEMO_GITHUB_EC2_IP_1 }} "ls -l ~/meinOrdner && head -n 1 ~/meinOrdner/info.txt"
