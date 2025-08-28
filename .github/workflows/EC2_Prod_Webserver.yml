@@ -1,0 +1,20 @@
+name: Deployment zu Prod EC2 Webserver
+
+on: push
+
+jobs:
+    build-1:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout Code
+            uses: actions/checkout@v5
+
+          - name: SSH Setup
+            run: |
+              mkdir -p ~/.ssh
+              echo "${{ secrets.DEMO_GITHUB_SSH_KEY }}" > ~/.ssh/github-demo-ssh-key
+              chmod 400 ~/.ssh/github-demo-ssh-key
+              ssh-keyscan -H ${{ secrets.DEMO_GITHUB_EC2_IP_1 }} >> ~/.ssh/known_hosts
+
+
+       

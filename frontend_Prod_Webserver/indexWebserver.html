@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wunderwelt der Tiere - Natur Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            /* Dunkles Waldgrün */
+            --secondary-color: #e8f5e9;
+            /* Sehr helles Grün / Cremeweiß */
+            --accent-color: #aed581;
+            /* Helles Moosgrün */
+            --text-dark: #333;
+            --text-light: #f4f4f4;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(46, 125, 50, 0.2);
+            /* Schatten mit Grün-Anteil */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            background-color: var(--secondary-color);
+            color: var(--text-dark);
+            transition: background-color 0.5s ease;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            text-align: center;
+            padding: 5rem 0 3rem;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1.5s ease-out;
+            background-image: url('https://images.unsplash.com/photo-1510405230302-18117765691e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxfHxmb3Jlc3QlMjBwYXRofGVufDB8fHx8MTcwMDgyMDMyM3ww&ixlib=rb-4.0.3&q=80&w=1080');
+            background-size: cover;
+            background-position: center;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.7), rgba(174, 213, 129, 0.4));
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            padding: 1rem;
+        }
+
+        #hostname-display {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-family: monospace;
+            z-index: 3;
+            text-align: left;
+        }
+
+        header h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 4rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        header p {
+            font-size: 1.3rem;
+            font-style: italic;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .animal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            padding-top: 3rem;
+        }
+
+        .animal-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 25px var(--shadow-color);
+            position: relative;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            border: 1px solid rgba(46, 125, 50, 0.1);
+        }
+
+        .animal-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 18px 35px rgba(46, 125, 50, 0.3);
+        }
+
+        .animal-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            filter: sepia(30%) brightness(90%);
+            transition: filter 0.6s ease;
+        }
+
+        .animal-card:hover img {
+            filter: sepia(0%) brightness(100%);
+        }
+
+        .animal-card-content {
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .animal-card-content h3 {
+            font-family: 'Merriweather', serif;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .animal-card-content p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-button {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--text-dark);
+            padding: 0.85rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-button:hover {
+            background-color: #8bc34a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            animation: fadeIn 0.5s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: zoomIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border: 2px solid var(--primary-color);
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 18px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-content h2 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-color);
+            font-size: 3rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .modal-content p {
+            font-size: 1.1rem;
+            color: #444;
+            text-align: justify;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #888;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--accent-color);
+            transform: rotate(90deg);
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            margin-top: 5rem;
+            font-size: 1rem;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div id="hostname-display"></div>
+        <div class="header-content">
+            <h1>Wildnis ruft</h1>
+            <p>Entdecke die Geheimnisse der Natur und ihrer Bewohner.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="animal-grid">
+
+            <div class="animal-card" data-animal="lion">
+                <img src="https://images.unsplash.com/photo-1594951475510-911477755b41?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxsaW9uJTIwc2F2YW5uYXxlbnwwfHx8fDE3MDA4MjA2MTd8MA&ixlib=rb-4.0.3&q=80&w=1080"
+                    alt="Majestätischer Löwe in der Savanne">
+                <div class="animal-card-content">
+                    <h3>Der majestätische Löwe</h3>
+                    <p>Ein Symbol für Stärke und Gemeinschaft.</p>
+                    <a href="#" class="card-button" onclick="showModal('lion'); return false;">Mehr erfahren</a>
+                </div>
+            </div>
+
+            <div class="animal-card" data-animal="elephant">
+                <img src="https://images.unsplash.com/photo-1548680874-bf7472de9847?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxlbGVwaGFudCUyMHdhbGtpbmd8ZW52ZWxvcGV8fHx8MTcwMDgyMDY0Mnww&ixlib=rb-4.0.3&q=80&w=1080"
+                    alt="Großer Elefant in der Natur">
+                <div class="animal-card-content">
+                    <h3>Der weise Elefant</h3>
+                    <p>Die Hüter der afrikanischen Ebenen.</p>
+                    <a href="#" class="card-button" onclick="showModal('elephant'); return false;">Mehr erfahren</a>
+                </div>
+            </div>
+
+            <div class="animal-card" data-animal="dolphin">
+                <img src="https://images.unsplash.com/photo-1616086772737-010e9f390036?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxkZWxwaGluJTIwb2NlYW58ZW52ZWxvcGV8fHx8MTcwMDgyMDY4MHww&ixlib=rb-4.0.3&q=80&w=1080"
+                    alt="Spielender Delphin im Meer">
+                <div class="animal-card-content">
+                    <h3>Der verspielte Delphin</h3>
+                    <p>Die intelligenten Botschafter der Ozeane.</p>
+                    <a href="#" class="card-button" onclick="showModal('dolphin'); return false;">Mehr erfahren</a>
+                </div>
+            </div>
+
+            <div class="animal-card" data-animal="penguin">
+                <img src="https://images.unsplash.com/photo-1507914046522-83b5e4063220?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxwZW5ndWluJTIwYXJjdGljfGVufDB8fHx8MTcwMDgyMDcxMHww&ixlib=rb-4.0.3&q=80&w=1080"
+                    alt="Niedliche Pinguine auf dem Eis">
+                <div class="animal-card-content">
+                    <h3>Der charmante Pinguin</h3>
+                    <p>Meister der Kälte und des Wassers.</p>
+                    <a href="#" class="card-button" onclick="showModal('penguin'); return false;">Mehr erfahren</a>
+                </div>
+            </div>
+
+            <div class="animal-card" data-animal="tiger">
+                <img src="https://images.unsplash.com/photo-1629853314068-d62194ff754e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHx0aWdlciUyBHRyb3BpY2FsJTIwZm9yZXN0fGVufDB8fHx8MTcwMDgyMDczN3ww&ixlib=rb-4.0.3&q=80&w=1080"
+                    alt="Ein majestätischer Tiger mit Streifen">
+                <div class="animal-card-content">
+                    <h3>Der geheimnisvolle Tiger</h3>
+                    <p>Der stille Jäger im Dschungel.</p>
+                    <a href="#" class="card-button" onclick="showModal('tiger'); return false;">Mehr erfahren</a>
+                </div>
+            </div>
+
+            <div class="animal-card" data-animal="eagle">
+                <img src="https://images.unsplash.com/photo-1507850898495-97e3a9dd7817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxlYWdsZSUyMGZseWluZ3xlbnwwfHx8fDE3MDA4MjA3NTl8MA&ixlib=rb-4.0.3&q=80&w=1080"
+                    alt="Ein Adler im Flug">
+                <div class="animal-card-content">
+                    <h3>Der freie Adler</h3>
+                    <p>Der König der Lüfte und der Weite.</p>
+                    <a href="#" class="card-button" onclick="showModal('eagle'); return false;">Mehr erfahren</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="animalModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <img id="modal-image" src="" alt="">
+            <h2 id="modal-title"></h2>
+            <p id="modal-description"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Wildnis ruft. Alle Rechte den Tieren.</p>
+    </footer>
+
+    <script>
+        const animalData = {
+            lion: {
+                title: "Der majestätische Löwe",
+                description: "Der Löwe (Panthera leo) ist eine große Katze, die für ihre soziale Struktur bekannt ist – sie leben in Rudeln. Männliche Löwen sind berühmt für ihre beeindruckende Mähne, die ihnen nicht nur Schutz bietet, sondern auch ihren Status signalisiert. Sie sind Spitzenprädatoren in der Savanne und spielen eine wichtige Rolle im Ökosystem.",
+                image: "https://images.unsplash.com/photo-1594951475510-911477755b41?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxsaW9uJTIwc2F2YW5uYXxlbnwwfHx8fDE3MDA4MjA2MTd8MA&ixlib=rb-4.0.3&q=80&w=1080"
+            },
+            elephant: {
+                title: "Der weise Elefant",
+                description: "Elefanten sind die größten Landsäugetiere und bekannt für ihre Intelligenz, ihr starkes Erinnerungsvermögen und ihr komplexes Sozialverhalten. Sie leben in Matriarchaten, angeführt von einer älteren Kuh. Ihr Rüssel ist ein vielseitiges Organ, das für Atmung, Geruch, Trinken und das Greifen von Objekten verwendet wird. Leider sind viele Elefantenarten stark bedroht.",
+                image: "https://images.unsplash.com/photo-1548680874-bf7472de9847?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxlbGVwaGFudCUyMHdhbGtpbmd8ZW52ZWxvcGV8fHx8MTcwMDgyMDY0Mnww&ixlib=rb-4.0.3&q=80&w=1080"
+            },
+            dolphin: {
+                title: "Der verspielte Delphin",
+                description: "Delphine sind faszinierende Meeressäugetiere, die für ihre hohe Intelligenz und ihre soziale Natur bekannt sind. Sie kommunizieren mit einer Vielzahl von Klicks und Pfiffen und nutzen Echolokation zur Navigation und Jagd. Ihre akrobatischen Sprünge und ihre freundliche Interaktion mit Menschen haben sie weltweit beliebt gemacht.",
+                image: "https://images.unsplash.com/photo-1616086772737-010e9f390036?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxkZWxwaGluJTIwb2NlYW58ZW52ZWxvcGV8fHx8MTcwMDgyMDY4MHww&ixlib=rb-4.0.3&q=80&w=1080"
+            },
+            penguin: {
+                title: "Der charmante Pinguin",
+                description: "Pinguine sind einzigartige, flugunfähige Seevögel, die in den kalten Gewässern der Südhalbkugel beheimatet sind. Ihr stromlinienförmiger Körper und ihre flossenartigen Flügel machen sie zu exzellenten Schwimmern und Tauchern. Sie leben in großen Kolonien und sind bekannt für ihr 'Watscheln' an Land und ihr charmantes Aussehen.",
+                image: "https://images.unsplash.com/photo-1507914046522-83b5e4063220?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxwZW5ndWluJTIwYXJjdGljfGVufDB8fHx8MTcwMDgyMDcxMHww&ixlib=rb-4.0.3&q=80&w=1080"
+            },
+            tiger: {
+                title: "Der geheimnisvolle Tiger",
+                description: "Tiger sind die größten aller Katzen und beeindrucken mit ihrem markanten orange-schwarz gestreiften Fell, das ihnen in ihrem natürlichen Lebensraum perfekte Tarnung bietet. Sie sind Einzelgänger und meisterhafte Jäger, die eine breite Palette von Lebensräumen in Asien bewohnen, von sibirischen Wäldern bis hin zu tropischen Regenwäldern. Leider sind sie stark vom Aussterben bedroht.",
+                image: "https://images.unsplash.com/photo-1629853314068-d62194ff754e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHx0aWdlciUyBHRyb3BpY2FsJTIwZm9yZXN0fGVufDB8fHx8MTcwMDgyMDczN3ww&ixlib=rb-4.0.3&q=80&w=1080"
+            },
+            eagle: {
+                title: "Der freie Adler",
+                description: "Adler sind majestätische Raubvögel, die an der Spitze der Nahrungskette stehen. Mit ihrer unglaublichen Sehkraft, ihren scharfen Krallen und ihrer beeindruckenden Flügelspannweite dominieren sie den Himmel. Sie sind oft Symbole für Freiheit, Stärke und Transzendenz in vielen Kulturen weltweit.",
+                image: "https://images.unsplash.com/photo-1507850898495-97e3a9dd7817?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxlYWdsZSUyMGZseWluZ3xlbnwwfHx8fDE3MDA4MjA3NTl8MA&ixlib=rb-4.0.3&q=80&w=1080"
+            }
+        };
+
+        const modal = document.getElementById('animalModal');
+        const modalImage = document.getElementById('modal-image');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDescription = document.getElementById('modal-description');
+
+        function showModal(animalName) {
+            const animal = animalData[animalName];
+            if (animal) {
+                modalImage.src = animal.image;
+                modalImage.alt = animal.title;
+                modalTitle.textContent = animal.title;
+                modalDescription.textContent = animal.description;
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Modal schließen, wenn der Nutzer außerhalb klickt
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Hostnamen anzeigen
+        document.addEventListener('DOMContentLoaded', () => {
+            const hostnameDisplay = document.getElementById('hostname-display');
+            if (window.location.hostname) {
+                hostnameDisplay.textContent = 'Hostname: ' + window.location.hostname;
+            } else {
+                hostnameDisplay.textContent = 'Hostname: Nicht verfügbar';
+            }
+        });
+    </script>
+</body>
+
+</html>
