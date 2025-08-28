@@ -14,9 +14,9 @@ jobs:
             - name: ssh setup
               run: | 
                 mkdir -p ~/.ssh
-                echo "${{secrets.EC2_PROD_WEBSERVER_SSH_KEY}}" > ~/.ssh/SSH_Prod_Webserver_KEY
+                echo "${{ secrets.EC2_PROD_WEBSERVER_SSH_KEY }}" > ~/.ssh/SSH_Prod_Webserver_KEY
                 chmod 400 ~/.ssh/SSH_Prod_Webserver_KEY
-                for ip in ${{secrets.EC2_PROD_WEBSERVER_IPS}}; do
+                for ip in ${{ secrets.EC2_PROD_WEBSERVER_IPS }}; do
                 ssh-keyscan -H $ip  >> ~/.ssh/known_hosts    
                 done
 
@@ -28,7 +28,7 @@ jobs:
             
             - name: index.html für nginx bereitstellen
               run: |
-                for ip in ${{secrets.EC2_PROD_WEBSERVER_IPS}}; do
+                for ip in ${{ secrets.EC2_PROD_WEBSERVER_IPS }}; do
                 scp -i ~/.ssh/SSH_Prod_Webserver_KEY frontend_Prod_Webserver/index.html ubuntu@$ip:/home/ubuntu/index.html
                 ssh -i ~/.ssh/SSH_Prod_Webserver_KEY ubuntu@$ip "sudo cp /home/ubuntu/index.html /var/www/html/index.html"    
                 done
