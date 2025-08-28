@@ -22,8 +22,8 @@ jobs:
 
             - name: Install Nginx
               run: |
-               ssh -i ~/.ssh/SSH_Test_Webserver_KEY ubuntu@${{ secrets.EC2_PROD_WEBSERVER_IPS }} "sudo apt update -y"
-               ssh -i ~/.ssh/SSH_Test_Webserver_KEY ubuntu@${{ secrets.EC2_PROD_WEBSERVER_IPS }} "sudo apt install nginx -y"
+               ssh -i ~/.ssh/EC2_PROD_WEBSERVER_SSH_KEY ubuntu@${{ secrets.EC2_PROD_WEBSERVER_IPS }} "sudo apt update -y"
+               ssh -i ~/.ssh/EC2_PROD_WEBSERVER_SSH_KEY ubuntu@${{ secrets.EC2_PROD_WEBSERVER_IPS }} "sudo apt install nginx -y"
 
             
             - name: index.html für nginx bereitstellen
