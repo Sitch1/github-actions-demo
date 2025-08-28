@@ -24,5 +24,5 @@ jobs:
 
             - name: indexWebserver.html für nginx bereitstellen
               run: |
-                scp -i ~/.ssh/SSH_Test_Webserver_KEY frontend_Prod_Webserver/indexWebserver.html ubuntu@${{ secrets.EC2_TEST_WEBSERVER_IP }}:/home/ubuntu/indexWebserver.html
-                ssh -i ~/.ssh/SSH_Test_Webserver_KEY ubuntu@${{ secrets.EC2_TEST_WEBSERVER_IP }} "sudo cp /home/ubuntu/indexWebserver.html /var/www/html/indexWebserver.html"    
+                scp -i ~/.ssh/SSH_Test_Webserver_KEY frontend_Prod_Webserver/index.html ubuntu@${{ secrets.EC2_TEST_WEBSERVER_IP }}:/home/ubuntu/index.html
+                ssh -i ~/.ssh/SSH_Test_Webserver_KEY ubuntu@${{ secrets.EC2_TEST_WEBSERVER_IP }} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"    
