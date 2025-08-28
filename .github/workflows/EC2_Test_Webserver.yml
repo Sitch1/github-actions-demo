@@ -15,7 +15,12 @@ jobs:
                 mkdir -p ~/.ssh
                 echo "${{ secrets.EC2_TEST_WEBSERVER_SSH_KEY }}" > ~/.ssh/SSH_Test_Webserver_KEY
                 chmod 400 ~/.ssh/SSH_Test_Webserver_KEY
-                ssh-keyscan -H ${{ secrets.EC2_TEST_WEBSERVER_IP }}  >> ~/.ssh/known_hosts    
+                ssh-keyscan -H ${{ secrets.EC2_TEST_WEBSERVER_IP }}  >> ~/.ssh/known_hosts 
+                
+            - name: Install Nginx
+              run: |
+               ssh -i ~/.ssh/SSH_Test_Webserver_KEY ubuntu@${{ secrets.EC2_TEST_WEBSERVER_IP }} "sudo apt update -y"
+               ssh -i ~/.ssh/SSH_Test_Webserver_KEY ubuntu@${{ secrets.EC2_TEST_WEBSERVER_IP }} "sudo apt install nginx -y"
 
             - name: indexWebserver.html für nginx bereitstellen
               run: |
