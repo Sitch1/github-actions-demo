@@ -13,11 +13,11 @@ jobs:
             - name: ssh setup
               run: | 
                 mkdir -p ~/.ssh
-                echo "${{secrets.EC2_TEST_WEBSERVER_SSH_KEY}}" > ~/.ssh/SSH_Test_Webserver_KEY
+                echo "${{ secrets.EC2_TEST_WEBSERVER_SSH_KEY }}" > ~/.ssh/SSH_Test_Webserver_KEY
                 chmod 400 ~/.ssh/SSH_Test_Webserver_KEY
-                ssh-keyscan -H ${{secrets.EC2_TEST_WEBSERVER_IP}}  >> ~/.ssh/known_hosts    
+                ssh-keyscan -H ${{ secrets.EC2_TEST_WEBSERVER_IP }}  >> ~/.ssh/known_hosts    
 
             - name: indexWebserver.html für nginx bereitstellen
               run: |
-                scp -i ~/.ssh/SSH_Test_Webserver_KEY frontend_Prod_Webserver/indexWebserver.html ubuntu@${{secrets.EC2_TEST_WEBSERVER_IP}}:/home/ubuntu/indexWebserver.html
-                ssh -i ~/.ssh/SSH_Test_Webserver_KEY ubuntu@${{secrets.EC2_TEST_WEBSERVER_IP}} "sudo cp /home/ubuntu/indexWebserver.html /var/www/html/indexWebserver.html"    
+                scp -i ~/.ssh/SSH_Test_Webserver_KEY frontend_Prod_Webserver/indexWebserver.html ubuntu@${{ secrets.EC2_TEST_WEBSERVER_IP }}:/home/ubuntu/indexWebserver.html
+                ssh -i ~/.ssh/SSH_Test_Webserver_KEY ubuntu@${{ secrets.EC2_TEST_WEBSERVER_IP }} "sudo cp /home/ubuntu/indexWebserver.html /var/www/html/indexWebserver.html"    
