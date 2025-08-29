@@ -1,7 +1,9 @@
 name: Deployment der index.htmlauf den Produktions-EC2 Maschinen des LBs
 
 on: 
-  push
+  push:
+   tags:
+      - 'v*'
 
 jobs:
     deploy:
